@@ -1,13 +1,57 @@
 import React, { useState } from "react"; import { motion } from "framer-motion";
 
-export default function NotflixApp() { const [films, setFilms] = useState([ { title: "Il Mio Primo Film", url: "https://www.w3schools.com/html/mov_bbb.mp4" } ]); const [title, setTitle] = useState(""); const [url, setUrl] = useState("");
+export default function NotflixApp() { const [films, setFilms] = useState([ { title: "Il Mio Primo Film", url: "https://www.w3schools.com/html/mov_bbb.mp4" } ]); const [title, setTitle] = useState(""); const [url, setUrl] = useState(""); const [search, setSearch] = useState(""); const [isLogin, setIsLogin] = useState(true);
 
 const addFilm = () => { if (title && url) { setFilms([...films, { title, url }]); setTitle(""); setUrl(""); } };
 
-return ( <div className="min-h-screen bg-black text-white p-4"> {/* Logo */} <motion.h1 initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-4xl font-bold text-red-600 mb-6" > ZOTFLIX </motion.h1>
+const filteredFilms = films.filter(f => f.title.toLowerCase().includes(search.toLowerCase()) );
 
-{/* Upload Section */}
-  <div className="mb-6 bg-gray-900 p-4 rounded-2xl">
+return ( <div className="min-h-screen bg-black text-white"> {/* Navbar stile Netflix */} <div className="flex justify-between items-center px-6 py-4 bg-black"> <motion.h1 initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-3xl font-bold text-red-600" > ZOTFLIX </motion.h1>
+
+<div className="flex items-center gap-4">
+      <input
+        placeholder="Cerca..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="px-3 py-1 rounded bg-gray-800"
+      />
+
+      <button
+        onClick={() => setIsLogin(false)}
+        className="bg-gray-700 px-3 py-1 rounded"
+      >
+        Iscriviti
+      </button>
+
+      <button
+        onClick={() => setIsLogin(true)}
+        className="bg-red-600 px-3 py-1 rounded"
+      >
+        Accedi
+      </button>
+    </div>
+  </div>
+
+  {/* Hero stile Netflix */}
+  <div className="h-64 bg-gradient-to-r from-black via-gray-900 to-black flex items-center px-10">
+    <div>
+      <h2 className="text-4xl font-bold mb-2">Benvenuto su Notflix</h2>
+      <p className="text-gray-400">Guarda e pubblica i tuoi film</p>
+    </div>
+  </div>
+
+  {/* Sezione login / signup (finta UI) */}
+  <div className="p-6">
+    <h2 className="text-2xl mb-2">{isLogin ? "Accedi" : "Iscriviti"}</h2>
+    <input placeholder="Email" className="block mb-2 p-2 text-black" />
+    <input placeholder="Password" type="password" className="block mb-2 p-2 text-black" />
+    <button className="bg-red-600 px-4 py-2 rounded">
+      {isLogin ? "Accedi" : "Crea Account"}
+    </button>
+  </div>
+
+  {/* Upload Section */}
+  <div className="px-6 mb-6">
     <h2 className="text-xl mb-2">Carica il tuo film</h2>
     <input
       className="text-black p-2 mr-2"
@@ -30,8 +74,8 @@ return ( <div className="min-h-screen bg-black text-white p-4"> {/* Logo */} <mo
   </div>
 
   {/* Film List */}
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-    {films.map((film, index) => (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6">
+    {filteredFilms.map((film, index) => (
       <div key={index} className="bg-gray-800 p-3 rounded-2xl">
         <h3 className="text-lg mb-2">{film.title}</h3>
         <video controls className="w-full rounded-xl">
