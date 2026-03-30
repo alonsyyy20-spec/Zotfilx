@@ -1,0 +1,45 @@
+import React, { useState } from "react"; import { motion } from "framer-motion";
+
+export default function NotflixApp() { const [films, setFilms] = useState([ { title: "Il Mio Primo Film", url: "https://www.w3schools.com/html/mov_bbb.mp4" } ]); const [title, setTitle] = useState(""); const [url, setUrl] = useState("");
+
+const addFilm = () => { if (title && url) { setFilms([...films, { title, url }]); setTitle(""); setUrl(""); } };
+
+return ( <div className="min-h-screen bg-black text-white p-4"> {/* Logo */} <motion.h1 initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-4xl font-bold text-red-600 mb-6" > ZOTFLIX </motion.h1>
+
+{/* Upload Section */}
+  <div className="mb-6 bg-gray-900 p-4 rounded-2xl">
+    <h2 className="text-xl mb-2">Carica il tuo film</h2>
+    <input
+      className="text-black p-2 mr-2"
+      placeholder="Titolo"
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+    />
+    <input
+      className="text-black p-2 mr-2"
+      placeholder="URL video"
+      value={url}
+      onChange={(e) => setUrl(e.target.value)}
+    />
+    <button
+      onClick={addFilm}
+      className="bg-red-600 px-4 py-2 rounded-xl"
+    >
+      Pubblica
+    </button>
+  </div>
+
+  {/* Film List */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {films.map((film, index) => (
+      <div key={index} className="bg-gray-800 p-3 rounded-2xl">
+        <h3 className="text-lg mb-2">{film.title}</h3>
+        <video controls className="w-full rounded-xl">
+          <source src={film.url} type="video/mp4" />
+        </video>
+      </div>
+    ))}
+  </div>
+</div>
+
+); }
