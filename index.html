@@ -1,84 +1,88 @@
-import React, { useState } from "react"; import { motion } from "framer-motion";
+import React, { useState } from "react"; import { motion } from "framer-motion"; import { Search } from "lucide-react";
 
-export default function NotflixApp() { const [films, setFilms] = useState([ { title: "Il Mio Primo Film", url: "https://www.w3schools.com/html/mov_bbb.mp4" } ]); const [title, setTitle] = useState(""); const [url, setUrl] = useState(""); const [search, setSearch] = useState(""); const [isLogin, setIsLogin] = useState(true);
-
-const addFilm = () => { if (title && url) { setFilms([...films, { title, url }]); setTitle(""); setUrl(""); } };
+export default function NotflixApp() { const [films, setFilms] = useState([ { title: "Il Mio Primo Film", url: "https://www.w3schools.com/html/mov_bbb.mp4" } ]); const [search, setSearch] = useState(""); const [showAuth, setShowAuth] = useState(false); const [isLogin, setIsLogin] = useState(true);
 
 const filteredFilms = films.filter(f => f.title.toLowerCase().includes(search.toLowerCase()) );
 
-return ( <div className="min-h-screen bg-black text-white"> {/* Navbar stile Netflix */} <div className="flex justify-between items-center px-6 py-4 bg-black"> <motion.h1 initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-3xl font-bold text-red-600" > ZOTFLIX </motion.h1>
+return ( <div className="min-h-screen bg-black text-white">
 
-<div className="flex items-center gap-4">
+{/* NAVBAR stile Netflix */}
+  <div className="flex items-center justify-between px-6 py-4 bg-black">
+    {/* SINISTRA */}
+    <button
+      onClick={() => setShowAuth(true)}
+      className="bg-gray-800 px-4 py-1 rounded hover:bg-gray-700"
+    >
+      Account
+    </button>
+
+    {/* CENTRO LOGO */}
+    <motion.h1
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      className="text-3xl font-bold text-red-600"
+    >
+      ZOTFLIX
+    </motion.h1>
+
+    {/* DESTRA SEARCH */}
+    <div className="flex items-center gap-2">
+      <Search />
       <input
-        placeholder="Cerca..."
+        placeholder="Cerca film..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="px-3 py-1 rounded bg-gray-800"
+        className="px-2 py-1 rounded bg-gray-800"
       />
-
-      <button
-        onClick={() => setIsLogin(false)}
-        className="bg-gray-700 px-3 py-1 rounded"
-      >
-        Iscriviti
-      </button>
-
-      <button
-        onClick={() => setIsLogin(true)}
-        className="bg-red-600 px-3 py-1 rounded"
-      >
-        Accedi
-      </button>
     </div>
   </div>
 
-  {/* Hero stile Netflix */}
+  {/* HERO */}
   <div className="h-64 bg-gradient-to-r from-black via-gray-900 to-black flex items-center px-10">
     <div>
       <h2 className="text-4xl font-bold mb-2">Benvenuto su Notflix</h2>
-      <p className="text-gray-400">Guarda e pubblica i tuoi film</p>
+      <p className="text-gray-400">Guarda i tuoi contenuti</p>
     </div>
   </div>
 
-  {/* Sezione login / signup (finta UI) */}
-  <div className="p-6">
-    <h2 className="text-2xl mb-2">{isLogin ? "Accedi" : "Iscriviti"}</h2>
-    <input placeholder="Email" className="block mb-2 p-2 text-black" />
-    <input placeholder="Password" type="password" className="block mb-2 p-2 text-black" />
-    <button className="bg-red-600 px-4 py-2 rounded">
-      {isLogin ? "Accedi" : "Crea Account"}
-    </button>
-  </div>
+  {/* PAGINA LOGIN / SIGNUP */}
+  {showAuth && (
+    <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center">
+      <div className="bg-gray-900 p-6 rounded-2xl w-80">
+        <h2 className="text-2xl mb-4 text-center">
+          {isLogin ? "Accedi" : "Iscriviti"}
+        </h2>
 
-  {/* Upload Section */}
-  <div className="px-6 mb-6">
-    <h2 className="text-xl mb-2">Carica il tuo film</h2>
-    <input
-      className="text-black p-2 mr-2"
-      placeholder="Titolo"
-      value={title}
-      onChange={(e) => setTitle(e.target.value)}
-    />
-    <input
-      className="text-black p-2 mr-2"
-      placeholder="URL video"
-      value={url}
-      onChange={(e) => setUrl(e.target.value)}
-    />
-    <button
-      onClick={addFilm}
-      className="bg-red-600 px-4 py-2 rounded-xl"
-    >
-      Pubblica
-    </button>
-  </div>
+        <input placeholder="Email" className="block mb-2 p-2 w-full text-black" />
+        <input placeholder="Password" type="password" className="block mb-4 p-2 w-full text-black" />
 
-  {/* Film List */}
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6">
+        <button className="bg-red-600 w-full py-2 rounded mb-2">
+          {isLogin ? "Accedi" : "Crea Account"}
+        </button>
+
+        <button
+          onClick={() => setIsLogin(!isLogin)}
+          className="text-sm text-gray-400 w-full"
+        >
+          {isLogin ? "Non hai un account? Iscriviti" : "Hai già un account? Accedi"}
+        </button>
+
+        <button
+          onClick={() => setShowAuth(false)}
+          className="mt-4 text-red-500 w-full"
+        >
+          Chiudi
+        </button>
+      </div>
+    </div>
+  )}
+
+  {/* FILM GRID */}
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-6 mt-6">
     {filteredFilms.map((film, index) => (
-      <div key={index} className="bg-gray-800 p-3 rounded-2xl">
-        <h3 className="text-lg mb-2">{film.title}</h3>
-        <video controls className="w-full rounded-xl">
+      <div key={index} className="bg-gray-800 p-2 rounded-xl hover:scale-105 transition">
+        <h3 className="text-sm mb-2">{film.title}</h3>
+        <video controls className="w-full rounded">
           <source src={film.url} type="video/mp4" />
         </video>
       </div>
